@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impresiones — Mi pedido</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="top">
+    <a class="marca" href="./" id="marca">Impresiones</a>
+    <nav><a href="./">Hacer otro pedido</a></nav>
+  </header>
+
+  <main id="app">
+    <h1>Mi pedido</h1>
+    <form id="formBuscar" class="card fila">
+      <div>
+        <label for="codigo">Código de pedido</label>
+        <input type="text" id="codigo" placeholder="Ej: K7P2QX" autocomplete="off" style="text-transform:uppercase" />
+      </div>
+      <div style="flex:0 0 auto"><button type="submit">Ver</button></div>
+    </form>
+    <p id="misPedidos" class="chico"></p>
+    <div id="resultado"></div>
+  </main>
+
+  <script type="module" src="js/pedido.js"></script>
+</body>
+</html>
