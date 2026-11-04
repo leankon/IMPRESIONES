@@ -2,47 +2,112 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Impresiones Lean</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impresiones — Hacé tu pedido</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <h1>Impresiones Lean</h1>
-  <div class="card">
-    <label for="tipo">Tipo de impresión</label>
-    <select id="tipo" onchange="calcularPrecio()">
-      <option value="" disabled selected>Seleccioná el tipo de impresión</option>
-      <option value="color">A color</option>
-      <option value="byn">Blanco y negro</option>
-    </select>
+  <header class="top">
+    <a class="marca" href="./" id="marca">Impresiones</a>
+    <nav><a href="pedido.html">Seguir mi pedido</a></nav>
+  </header>
 
-    <label for="cantidad">Cantidad de hojas</label>
-    <input type="number" id="cantidad" min="1" placeholder="Ej: 10" oninput="calcularPrecio()" />
+  <main id="app">
+    <h1>Hacé tu pedido</h1>
+    <p class="sub">Elegí apuntes del catálogo o subí tu PDF. Pagás online y te lo entregamos en el colegio.</p>
 
-    <label for="pdfInput">Cargar PDF</label>
-    <input type="file" id="pdfInput" accept="application/pdf" onchange="leerPDF(); permitirEdicion()" />
+    <div id="avisoGeneral" class="aviso oculto"></div>
+    <div id="cerrado" class="card oculto"><h2>Por ahora no estamos tomando pedidos</h2><p>Volvé a pasar en unos días.</p></div>
 
-    <label>
-      <input type="checkbox" id="anillado" onchange="calcularPrecio()" />
-      Quiero anillado
-    </label>
+    <div id="tienda">
+      <section class="card">
+        <h2>1. Apuntes y libros</h2>
+        <input type="search" id="buscar" placeholder="Buscar (ej: Toldot, Biología)…" aria-label="Buscar en el catálogo" />
+        <div id="catalogo" class="catalogo" style="margin-top:12px"><p class="vacio">Cargando…</p></div>
+      </section>
 
-    <div class="checkbox-libro">
-      <input type="checkbox" id="sinCantidad" onchange="toggleLibroSinCantidad()" />
-      <label for="sinCantidad">No sé la cantidad de paginas, quiero pedir un libro por el titulo</label>
+      <section class="card">
+        <h2>2. Imprimir mi PDF</h2>
+        <label for="pdfInput">Elegí el archivo</label>
+        <input type="file" id="pdfInput" accept="application/pdf" />
+        <div id="pdfOpciones" class="oculto">
+          <p id="pdfInfo" class="chico" style="margin-top:8px"></p>
+          <div class="grilla2">
+            <div>
+              <label for="pdfColor">Impresión</label>
+              <select id="pdfColor">
+                <option value="byn">Blanco y negro</option>
+                <option value="color">A color</option>
+              </select>
+            </div>
+            <div>
+              <label for="pdfFaz">Faz</label>
+              <select id="pdfFaz">
+                <option value="doble">Doble faz (ambos lados)</option>
+                <option value="simple">Simple faz (un lado)</option>
+              </select>
+            </div>
+            <div>
+              <label for="pdfCantidad">Copias</label>
+              <input type="number" id="pdfCantidad" min="1" max="200" value="1" />
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" id="pdfAnillado" /> Anillado</label>
+          <p>Precio por copia: <b id="pdfPrecio">$0</b></p>
+          <button id="pdfAgregar">Agregar al pedido</button>
+        </div>
+        <p class="chico" style="margin-top:10px" id="tarifas"></p>
+      </section>
+
+      <section class="card" id="seccionCarrito">
+        <h2>3. Tu pedido</h2>
+        <ul id="carrito" class="lista-items"></ul>
+        <div class="totales" id="totales"></div>
+      </section>
+
+      <section class="card" id="seccionDatos">
+        <h2>4. Tus datos</h2>
+        <form id="formPedido" novalidate>
+          <div class="grilla2">
+            <div>
+              <label for="nombre">Nombre y apellido</label>
+              <input type="text" id="nombre" autocomplete="name" required maxlength="80" />
+            </div>
+            <div>
+              <label for="curso">Curso / división</label>
+              <input type="text" id="curso" placeholder="Ej: 3° B" maxlength="40" />
+            </div>
+            <div>
+              <label for="telefono">WhatsApp</label>
+              <input type="tel" id="telefono" autocomplete="tel" placeholder="Ej: 11 2233 4455" required maxlength="30" />
+            </div>
+          </div>
+          <label for="notas">Aclaraciones (opcional)</label>
+          <textarea id="notas" maxlength="500" placeholder="Ej: páginas 1 a 40 solamente"></textarea>
+
+          <h3 style="margin-top:16px">¿Cómo pagás?</h3>
+          <div class="metodos">
+            <label class="metodo" id="metodoMP">
+              <input type="radio" name="pago" value="mercadopago" checked />
+              <span><b>Mercado Pago</b><br><span class="chico">Tarjeta, débito o dinero en cuenta. Se acredita al instante.</span></span>
+            </label>
+            <label class="metodo">
+              <input type="radio" name="pago" value="transferencia" />
+              <span><b>Transferencia</b><br><span class="chico">Te mostramos el alias y subís el comprobante.</span></span>
+            </label>
+          </div>
+          <button type="submit" class="grande" id="btnConfirmar" style="margin-top:16px">Confirmar pedido</button>
+        </form>
+      </section>
     </div>
+  </main>
 
-    <input type="text" id="tituloLibro" placeholder="Ingresá el título del libro" />
-    <ul id="sugerenciasLibros" class="sugerencias"></ul>
-
-    <div id="precio" class="precio">El precio total es: $0</div>
-
-    <button onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
+  <div class="barra-total" id="barraTotal">
+    <span>Total: <span class="total" id="barraMonto">$0</span></span>
+    <a class="boton" href="#seccionDatos">Finalizar</a>
   </div>
 
-  <p id="aviso" class="aviso">Este precio es aproximado. Si compra por cantidad, es posible que se le haga un descuento.</p>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-  <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script type="module" src="js/tienda.js"></script>
 </body>
 </html>
